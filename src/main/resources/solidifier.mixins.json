@@ -1,0 +1,16 @@
+{
+  "required": true,
+  "package": "survivalblock.solidifier.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "client": [
+    "MinecraftClientMixin",
+    "SpriteContentsMixin",
+    "TextureManagerMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "overwrites": {
+    "requireAnnotations": true
+	}
+}

@@ -1,0 +1,35 @@
+{
+	"schemaVersion": 1,
+	"id": "solidifier",
+	"version": "${version}",
+	"name": "Solidifier",
+	"description": "Turns every texture into dirt",
+	"authors": [
+		"Survivalblock"
+	],
+	"contact": {
+		"homepage": "https://modrinth.com/mod/solidifier",
+		"sources": "https://github.com/ekulxam/solidifier",
+        "issues": "https://github.com/ekulxam/solidifier/issues"
+	},
+	"license": "ARR",
+	"icon": "assets/solidifier/icon.png",
+	"environment": "client",
+	"entrypoints": {
+		"client": [
+			"survivalblock.solidifier.Solidifier"
+		]
+	},
+	"mixins": [
+		"solidifier.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.16",
+		"minecraft": "~1.21.1",
+		"java": ">=21",
+		"fabric-api": "*"
+	},
+	"suggests": {
+		"another-mod": "*"
+	}
+}

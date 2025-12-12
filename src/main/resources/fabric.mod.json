@@ -3,7 +3,7 @@
 	"id": "solidifier",
 	"version": "${version}",
 	"name": "Solidifier",
-	"description": "Turns every texture into dirt",
+	"description": "Turns every texture into a texture of your choice",
 	"authors": [
 		"Survivalblock"
 	],

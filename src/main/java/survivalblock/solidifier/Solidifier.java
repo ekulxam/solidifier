@@ -1,6 +1,8 @@
 package survivalblock.solidifier;
 
 import net.fabricmc.api.ClientModInitializer;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.texture.AbstractTexture;
 import net.minecraft.client.texture.NativeImage;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.util.Identifier;
@@ -8,10 +10,12 @@ import net.minecraft.util.math.ColorHelper;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import survivalblock.solidifier.mixin.TextureManagerAccessor;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class Solidifier implements ClientModInitializer {
 	public static final String MOD_ID = "solidifier";
@@ -22,17 +26,28 @@ public class Solidifier implements ClientModInitializer {
 
 	@Override
 	public void onInitializeClient() {
-        SolidifierConfig.INSTANCE.registerCallback(config -> COMPUTED.clear());
+        SolidifierConfig.INSTANCE.registerCallback(config -> {
+            MinecraftClient client = MinecraftClient.getInstance();
+            Map<Identifier, AbstractTexture> textures = ((TextureManagerAccessor) client.getTextureManager()).solidifer$getTextures();
+            COMPUTED.forEach(textures::remove);
+            COMPUTED.clear();
+            client.reloadResources();
+        });
 	}
 
     @Nullable
     public static NativeImage compute(NativeImage thisImage, ResourceManager resourceManager) {
         NativeImage dirtImage;
+        Identifier id = SolidifierConfig.INSTANCE.getId();
+        if (id == null) {
+            return null;
+        }
+
         try {
-            dirtImage = NativeImage.read(resourceManager.open(SolidifierConfig.INSTANCE.dirt));
+            dirtImage = NativeImage.read(resourceManager.open(id));
         } catch (IOException ioException) {
             if (SolidifierConfig.INSTANCE.debug) {
-                Solidifier.LOGGER.error("Could not create a NativeImage for {}", SolidifierConfig.INSTANCE.dirt, ioException);
+                Solidifier.LOGGER.error("Could not create a NativeImage for {}", SolidifierConfig.INSTANCE.texture, ioException);
             }
             return null;
         }

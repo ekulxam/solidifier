@@ -22,14 +22,18 @@ public class Solidifier implements ClientModInitializer {
 
 	@Override
 	public void onInitializeClient() {
+        SolidifierConfig.INSTANCE.registerCallback(config -> COMPUTED.clear());
 	}
 
     @Nullable
     public static NativeImage compute(NativeImage thisImage, ResourceManager resourceManager) {
         NativeImage dirtImage;
         try {
-            dirtImage = NativeImage.read(resourceManager.open(DIRT));
-        } catch (IOException ignored) {
+            dirtImage = NativeImage.read(resourceManager.open(SolidifierConfig.INSTANCE.dirt));
+        } catch (IOException ioException) {
+            if (SolidifierConfig.INSTANCE.debug) {
+                Solidifier.LOGGER.error("Could not create a NativeImage for {}", SolidifierConfig.INSTANCE.dirt, ioException);
+            }
             return null;
         }
 
@@ -45,7 +49,10 @@ public class Solidifier implements ClientModInitializer {
                     soilfied.setColor(i, j, ColorHelper.Abgr.withAlpha(ColorHelper.Abgr.getAlpha(thisImage.getColor(i, j)), dirtImage.getColor(i % dirtWidth, j % dirtHeight)));
                 }
             }
-        } catch (Throwable ignored) {
+        } catch (Throwable throwable) {
+            if (SolidifierConfig.INSTANCE.debug) {
+                Solidifier.LOGGER.error("An error occurred while generating solidified texture", throwable);
+            }
             return null;
         }
 

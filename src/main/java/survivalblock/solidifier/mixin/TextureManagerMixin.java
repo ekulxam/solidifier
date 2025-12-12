@@ -12,6 +12,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import survivalblock.solidifier.Solidifier;
+import survivalblock.solidifier.SolidifierConfig;
 
 import java.io.IOException;
 
@@ -25,20 +26,22 @@ public abstract class TextureManagerMixin {
     @Shadow
     public abstract void registerTexture(Identifier id, AbstractTexture texture);
 
-
     @ModifyReturnValue(method = "getTexture", at = @At("RETURN"))
     private AbstractTexture soilify(AbstractTexture abstractTexture, Identifier id) {
-        if (Solidifier.COMPUTED.contains(id)) {
+        if (!SolidifierConfig.INSTANCE.changeGUI || Solidifier.COMPUTED.contains(id)) {
             return abstractTexture;
         }
-        if (id.equals(Solidifier.DIRT) || (id.getNamespace().equals(Identifier.DEFAULT_NAMESPACE) && id.getPath().startsWith("missing"))) {
+        if (id.equals(SolidifierConfig.INSTANCE.dirt) || (id.getNamespace().equals(Identifier.DEFAULT_NAMESPACE) && id.getPath().startsWith("missing"))) {
             return abstractTexture;
         }
 
         NativeImage thisImage;
         try {
             thisImage = NativeImage.read(this.resourceContainer.open(id));
-        } catch (IOException ignored) {
+        } catch (IOException ioException) {
+            if (SolidifierConfig.INSTANCE.debug) {
+                Solidifier.LOGGER.error("Could not create a NativeImage for {}", id, ioException);
+            }
             return abstractTexture;
         }
 

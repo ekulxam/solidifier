@@ -4,6 +4,7 @@ import net.fabricmc.api.ClientModInitializer;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.texture.AbstractTexture;
 import net.minecraft.client.texture.NativeImage;
+import net.minecraft.client.texture.TextureManager;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.ColorHelper;
@@ -24,13 +25,21 @@ public class Solidifier implements ClientModInitializer {
     public static final Identifier DIRT = Identifier.ofVanilla("textures/block/dirt.png");
     public static final List<Identifier> COMPUTED = new ArrayList<>();
 
+    @Nullable
+    public static Identifier textureId = Solidifier.DIRT;
+    @Nullable
+    public static List<Identifier> blacklistIds = new ArrayList<>();
+
 	@Override
 	public void onInitializeClient() {
+        SolidifierConfig.INSTANCE.updateValues();
         SolidifierConfig.INSTANCE.registerCallback(config -> {
             MinecraftClient client = MinecraftClient.getInstance();
-            Map<Identifier, AbstractTexture> textures = ((TextureManagerAccessor) client.getTextureManager()).solidifer$getTextures();
-            COMPUTED.forEach(textures::remove);
+            TextureManager textureManager = client.getTextureManager();
+            //Map<Identifier, AbstractTexture> textures = ((TextureManagerAccessor) textureManager).solidifer$getTextures();
+            COMPUTED.forEach(textureManager::destroyTexture);
             COMPUTED.clear();
+            SolidifierConfig.INSTANCE.updateValues();
             client.reloadResources();
         });
 	}
@@ -38,16 +47,15 @@ public class Solidifier implements ClientModInitializer {
     @Nullable
     public static NativeImage compute(NativeImage thisImage, ResourceManager resourceManager) {
         NativeImage dirtImage;
-        Identifier id = SolidifierConfig.INSTANCE.getId();
-        if (id == null) {
+        if (textureId == null) {
             return null;
         }
 
         try {
-            dirtImage = NativeImage.read(resourceManager.open(id));
+            dirtImage = NativeImage.read(resourceManager.open(textureId));
         } catch (IOException ioException) {
             if (SolidifierConfig.INSTANCE.debug) {
-                Solidifier.LOGGER.error("Could not create a NativeImage for {}", SolidifierConfig.INSTANCE.texture, ioException);
+                Solidifier.LOGGER.error("Could not create a NativeImage for {}", Solidifier.textureId, ioException);
             }
             return null;
         }

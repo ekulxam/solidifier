@@ -31,7 +31,10 @@ public abstract class TextureManagerMixin {
         if (!SolidifierConfig.INSTANCE.changeGUI || Solidifier.COMPUTED.contains(id)) {
             return abstractTexture;
         }
-        if (id.equals(SolidifierConfig.INSTANCE.texture) || (id.getNamespace().equals(Identifier.DEFAULT_NAMESPACE) && id.getPath().startsWith("missing"))) {
+        if (id.equals(Solidifier.textureId) || (id.getNamespace().equals(Identifier.DEFAULT_NAMESPACE) && id.getPath().startsWith("missing"))) {
+            return abstractTexture;
+        }
+        if (Solidifier.blacklistIds != null && Solidifier.blacklistIds.contains(id)) {
             return abstractTexture;
         }
 

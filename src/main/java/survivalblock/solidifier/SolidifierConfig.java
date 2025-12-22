@@ -1,6 +1,8 @@
 package survivalblock.solidifier;
 
 import folk.sisby.kaleido.api.WrappedConfig;
+import folk.sisby.kaleido.lib.quiltconfig.api.values.ValueList;
+import folk.sisby.kaleido.lib.quiltconfig.impl.values.ValueListImpl;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.util.Identifier;
 
@@ -16,7 +18,7 @@ public class SolidifierConfig extends WrappedConfig {
     public boolean changeGUI = false;
     public boolean changeAtlases = true;
     public boolean debug = false;
-    public List<String> textureBlacklist = new ArrayList<>();
+    public ValueList<String> textureBlacklist = new ValueListImpl<>("", new ArrayList<>());
 
     public void updateValues() {
         Solidifier.textureId = Identifier.tryParse(this.texture);

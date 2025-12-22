@@ -2,7 +2,6 @@ package survivalblock.solidifier;
 
 import net.fabricmc.api.ClientModInitializer;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.texture.AbstractTexture;
 import net.minecraft.client.texture.NativeImage;
 import net.minecraft.client.texture.TextureManager;
 import net.minecraft.resource.ResourceManager;
@@ -11,12 +10,10 @@ import net.minecraft.util.math.ColorHelper;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import survivalblock.solidifier.mixin.TextureManagerAccessor;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class Solidifier implements ClientModInitializer {
 	public static final String MOD_ID = "solidifier";

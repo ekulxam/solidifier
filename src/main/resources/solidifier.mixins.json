@@ -5,7 +5,6 @@
   "client": [
     "MinecraftClientMixin",
     "SpriteContentsMixin",
-    "TextureManagerAccessor",
     "TextureManagerMixin"
   ],
   "injectors": {

@@ -7,7 +7,6 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.util.Identifier;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
